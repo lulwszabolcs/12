@@ -1,4 +1,4 @@
-package com.example.memorygame;
+package com.example.demo;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

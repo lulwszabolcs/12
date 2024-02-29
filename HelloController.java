@@ -1,4 +1,4 @@
-package com.example.memorygame;
+package com.example.demo;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -7,91 +7,111 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Paint;
 
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.ResourceBundle;
 
 public class HelloController implements Initializable {
 
     @FXML
-    private Label a0;
+    private Label lbl1;
 
     @FXML
-    private Label a1;
+    private Label lbl2;
 
     @FXML
-    private Label a2;
+    private Label lbl3;
 
     @FXML
-    private Label a3;
+    private Label lbl4;
 
     @FXML
-    private Label b0;
+    private Label lbl5;
 
     @FXML
-    private Label b1;
+    private Label lbl6;
 
     @FXML
-    private Label b2;
+    private Label lbl7;
 
     @FXML
-    private Label b3;
+    private Label lbl8;
 
     @FXML
-    private Label c0;
+    private Label lblKattintas;
 
     @FXML
-    private Label c1;
-
+    private Label lblUzenet;
+    private ArrayList<Label> kartyak;
+    private ArrayList<Label> felforditottKartyak;
+    private ArrayList<Label> marKitalalt;
+    private ArrayList<String> ertekek;
     @FXML
-    private Label c2;
-
-    @FXML
-    private Label c3;
-    ArrayList<Label> labels;
-    ArrayList<Label> felforditott = new ArrayList<>();
-    @FXML
-    void kivalaszt(MouseEvent event) {
-        if (felforditott.size() < 2) {
+    void felfordit(MouseEvent event) {
+        if (felforditottKartyak.size() < 2) {
             Label clicked = (Label) event.getSource();
-            felforditott.add(clicked);
-            clicked.setTextFill(Paint.valueOf("#000000"));
-        } else {
-            if (ugyanolyan(felforditott.get(0),felforditott.get(1))) {
-                eltuntet();
-            } else {
-                lefordit();
+            if (!felforditottKartyak.contains(clicked)) {
+                felforditottKartyak.add(clicked);
+            }
+            showCards();
+            //showCards(felforditottKartyak.get(1));
+            if (felforditottKartyak.size() == 2 && (felforditottKartyak.get(0).getText().equals(ertekek.get(0)))) {
+                felforditottKartyak.get(0).setTextFill(Paint.valueOf("008000"));
+                marKitalalt.add(felforditottKartyak.get(1));
+                felforditottKartyak.remove(0);
+                ertekek.remove(0);
+                hideCards();
+
+            } else if (felforditottKartyak.size() == 2 && felforditottKartyak.get(1).getText().equals(ertekek.get(0))) {
+                felforditottKartyak.get(1).setTextFill(Paint.valueOf("008000"));
+                marKitalalt.add(felforditottKartyak.get(1));
+                felforditottKartyak.remove(1);
+                ertekek.remove(0);
+                hideCards();
+            } else if (felforditottKartyak.size() == 2 && !felforditottKartyak.get(0).getText().equals(ertekek.get(0)) &&!felforditottKartyak.get(1).getText().equals(ertekek.get(0)) ) {
+                felforditottKartyak.get(0).setTextFill(Paint.valueOf("#000000"));
+                felforditottKartyak.remove(0);
+            }
+            if (marKitalalt.size() == 7) {
+                lblUzenet.setText("NYertel");
+                felforditottKartyak.get(0).setTextFill(Paint.valueOf("#008000"));
             }
         }
+
+        /*
+        if (felforditottKartyak.get(0).getText().equals(ertekek.get(0))) {
+        } else if (felforditottKartyak.get(1).getText().equals(ertekek.get(0))) {
+            ertekek.remove(0);
+            felforditottKartyak.remove(0);
+        }*/
+        System.out.println(felforditottKartyak);
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        labels = new ArrayList<>(Arrays.asList(a0,a1,a2,a3,b0,b1,b2,b3,c0,c1,c2,c3));
+        felforditottKartyak = new ArrayList<>();
+        marKitalalt = new ArrayList<>();
+        ertekek = new ArrayList<>(Arrays.asList("1","2","3","4","5","6","7","8"));
+        kartyak = new ArrayList<>(Arrays.asList(lbl1,lbl2,lbl3,lbl4,lbl5,lbl6,lbl7,lbl8));
         newGame();
-    }
+        System.out.println(felforditottKartyak);
 
+    }
     private void newGame() {
-        ArrayList<Character> chars = new ArrayList<>(Arrays.asList('%','%','!','!','#','#','/','/','=','=','*','*'));
-        Collections.shuffle(chars);
-        for (int i = 0; i < labels.size(); i++) {
-            labels.get(i).setText(String.valueOf(chars.get(i)));
-            labels.get(i).setTextFill(Paint.valueOf("#808080"));
+        for (Label label : kartyak) {
+            label.setTextFill(Paint.valueOf("#000000"));
+        }
+        felforditottKartyak.clear();
+    }
+    private void showCards() {
+        for (Label label : felforditottKartyak) {
+            label.setTextFill(Paint.valueOf("#FFFFFF"));
         }
     }
-    private boolean ugyanolyan(Label l1, Label l2) {
-        if (Objects.equals(l1.getText(), l2.getText())) {
-            return true;
-        } else {
-            return false;
+    private void hideCards() {
+        for (Label label : felforditottKartyak) {
+            label.setTextFill(Paint.valueOf("#000000"));
         }
-    }
-    private void eltuntet() {
-        felforditott.get(0).setVisible(false);
-        felforditott.get(1).setVisible(false);
-        felforditott.clear();
-    }
-    private void lefordit() {
-        felforditott.get(0).setTextFill(Paint.valueOf("#808080"));
-        felforditott.get(1).setTextFill(Paint.valueOf("#808080"));
-        felforditott.clear();
+        felforditottKartyak.clear();
     }
 }
